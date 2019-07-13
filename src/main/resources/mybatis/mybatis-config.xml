@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+    <properties resource="mysqlConfig.properties">
+
+    </properties>
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="True"/>
+        <!-- 延迟加载 -->
+        <setting name="lazyLoadingEnabled" value="True"/>
+        <setting name="aggressiveLazyLoading" value="True"/>
+    </settings>
+
+    <!-- 环境切换:default为development开发环境 -->
+    <environments default="development">
+        <!-- 本地数据库链接 -->
+        <environment id="development">
+            <!--事务管理器 -->
+            <transactionManager type="JDBC"></transactionManager>
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+        <!-- server数据库链接 -->
+        <environment id="server">
+            <transactionManager type="JDBC"></transactionManager>
+            <dataSource type="POOLED">
+                <property name="driver" value="${server.driver}"/>
+                <property name="url" value="${server.url}"/>
+                <property name="username" value="${server.username}"/>
+                <property name="password" value="${server.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+</configuration>

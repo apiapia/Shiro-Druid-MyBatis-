@@ -1,0 +1,53 @@
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+  # 配置在mybatis-config.xml内
+  #    driver-class-name: com.mysql.cj.jdbc.Driver
+  #    url: jdbc:mysql://localhost:3306/Druid?useSSL=false
+  #    username: root
+  #    password: root.com
+  #thymeleaf配置
+  thymeleaf:
+    mode: HTML
+    prefix: classpath:/templates/
+    suffix: .html
+    encoding: UTF-8
+    servlet:
+      content-type: text/html
+    #开发时关闭缓存,不然没法看到实时页面 重要
+    cache: false
+  #uploadFileSize
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
+#classpath*:/mappers/*.xml
+#引用mybatis-config的配置
+mybatis:
+  config-location: classpath:/mybatis/mybatis-config.xml
+  mapper-locations: classpath:/mapper/*.xml
+  type-aliases-package: com.example.druid.bean
+
+#druid配置
+# 打断点在单元测试中查看druid的配置是否失效
+# System.out.println(dataSource.getClass());
+druid:
+  minIdle: 5
+  initialSize: 5
+  maxActive: 20
+  url: jdbc:mysql://localhost:3306/Druid?useSSL=false
+  username: root
+  password: root.com
+
+#网页端口
+server:
+  port: 8181
+
+#redis配置
+redis:
+  host: 127.0.0.1
+  port: 6379
+  timeout: 10
+  poolMaxTotal: 1000
+  poolMaxIdle: 500
+  poolMaxWait: 500
