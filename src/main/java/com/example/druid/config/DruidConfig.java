@@ -21,7 +21,7 @@ public class DruidConfig {
     /**
      * 配置DruidConfig
      * */
-    @ConfigurationProperties(prefix = "spring.datasource")
+    @ConfigurationProperties(prefix = "druid")
     @Bean
     public DataSource druid() {
         return new DruidDataSource();
@@ -36,6 +36,7 @@ public class DruidConfig {
        // 登录URL http://localhost:8080/druid/login.html
         reg.addUrlMappings("/druid/*");
         reg.addInitParameter("allow","");
+        /*开启用户名与密码*/
         reg.addInitParameter("loginUsername","root");
         reg.addInitParameter("loginPassword","root");
 

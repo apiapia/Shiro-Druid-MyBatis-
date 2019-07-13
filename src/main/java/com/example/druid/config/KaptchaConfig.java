@@ -28,9 +28,9 @@ public class KaptchaConfig {
         // 设置图片宽度
         properties.setProperty("kaptcha.image.width", "180");
         // 设置图片高度
-        properties.setProperty("kaptcha.image.height", "40");
+        properties.setProperty("kaptcha.image.height", "50");
         // 设置字体尺寸
-        properties.setProperty("kaptcha.textproducer.font.size", "35");
+        properties.setProperty("kaptcha.textproducer.font.size", "42");
         // 设置图片样式
         properties.setProperty("kaptcha.obscurificator.impl","com.google.code.kaptcha.impl.ShadowGimpy");
         // 设置session key
@@ -38,7 +38,7 @@ public class KaptchaConfig {
         // 设置验证码长度
         properties.setProperty("kaptcha.textproducer.char.length", CODE_LENGTH);
         // 设置字体
-        properties.setProperty("kaptcha.textproducer.font.names", "宋体,黑体");
+        properties.setProperty("kaptcha.textproducer.font.names", "Arial");
         Config config = new Config(properties);
         defaultKaptcha.setConfig(config);
         return defaultKaptcha;

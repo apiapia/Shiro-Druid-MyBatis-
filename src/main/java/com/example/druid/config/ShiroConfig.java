@@ -46,11 +46,19 @@ public class ShiroConfig {
 
         Map<String,String> filterMap = new LinkedHashMap<>();
 
-        //放行页面
+        //须要放行的所有页面
         filterMap.put("/welcome","anon");
         filterMap.put("/login","anon");
         filterMap.put("/getVerifyCode","anon"); //getVerifyCode kaptcha验证码;
         filterMap.put("/druid/**","anon");
+
+        //会员注册
+        filterMap.put("/register","anon");
+
+        //文件上传
+        filterMap.put("/file","anon");
+        filterMap.put("/fileupload","anon");
+
 
         //退出登录
         filterMap.put("/logout","logout");

@@ -1,6 +1,7 @@
 package com.example.druid.controller;
 
 import com.example.druid.untils.MD5Util;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+@Slf4j
 @Controller
 public class LoginController {
 
@@ -35,7 +37,9 @@ public class LoginController {
         //1.新建一个token
         // 加密密码
         String md5Pwd =  MD5Util.encrypt(lastName,password);
-        //System.out.println("md5Pwd" + md5Pwd);
+        //只打印 不记录到log文件 /www/wwwroot/
+        System.out.println("md5Pwd" + md5Pwd);
+
         UsernamePasswordToken token = new UsernamePasswordToken(lastName,md5Pwd);
 
         //2.shiro的SecurityUtils工具 获取subject对象; 注意区分Spring的SecurityUtils;
@@ -53,6 +57,7 @@ public class LoginController {
             //跳转到UserRealm的验证规则;
             currentUser.login(token);
             //登录成功
+            log.info("登录成功");
             model.addAttribute("msg","登录成功");
             //须重定
             return "redirect:/admin";

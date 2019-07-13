@@ -3,7 +3,7 @@ package com.example.druid.config;
 import com.example.druid.bean.Employee;
 import com.example.druid.mapper.EmployeeMapper;
 import org.apache.catalina.security.SecurityUtil;
-import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.SecurityUtils; //引入shiro的SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
