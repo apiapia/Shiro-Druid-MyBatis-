@@ -61,6 +61,7 @@ public class DeptController {
         employeeMapper.insertEmp(employee);
         int id = employee.getId();
         System.out.println("取得自增ID:"+ id);
+
         return employee;
     }
 }

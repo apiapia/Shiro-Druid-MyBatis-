@@ -3,7 +3,11 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.druid.mapper.UserMapper">
-    <select id="getUserById" resultType="com.example.druid.bean.User">
+    <!-- 调用EmployeeMapper命名空间的缓存 ehcache -->
+    <cache-ref namespace="com.example.druid.mapper.EmployeeMapper"/>
+
+    <!-- 使用缓存 -->
+    <select id="getUserById" useCache="true" resultType="com.example.druid.bean.User">
        select u.*,e.* from USER u inner join employee e on u.id = b.id
     </select>
 </mapper>

@@ -2,21 +2,29 @@
 <!DOCTYPE configuration
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
-
+<!-- 注意configuration的参数加载顺序 -->
 <configuration>
 
-    <properties resource="mysqlConfig.properties">
+    <properties resource="mysqlConfig.properties"></properties>
 
-    </properties>
     <settings>
+        <setting name="logImpl" value="LOG4J"></setting>
+        <!-- 开启二级缓存,已调用第三方的，不须要再开启myBatis的缓存 -->
+<!--        <setting name="cacheEnabled" value="true"/>-->
+        <!-- Camel命名 -->
         <setting name="mapUnderscoreToCamelCase" value="True"/>
         <!-- 延迟加载 -->
         <setting name="lazyLoadingEnabled" value="True"/>
         <setting name="aggressiveLazyLoading" value="True"/>
     </settings>
 
+    <!-- 类的别名 -->
+    <typeAliases>
+        <package name="com.example.druid.bean"/>
+    </typeAliases>
+
     <!-- 环境切换:default为development开发环境 -->
-    <environments default="development">
+    <environments default="server">
         <!-- 本地数据库链接 -->
         <environment id="development">
             <!--事务管理器 -->
@@ -39,5 +47,10 @@
             </dataSource>
         </environment>
     </environments>
+
+    <!-- sql映射文件 EmployeeMapper.xml 单元测试时打开 -->
+    <mappers>
+<!--        <mapper resource="mapper/EmployeeMapper.xml"></mapper>-->
+    </mappers>
 
 </configuration>

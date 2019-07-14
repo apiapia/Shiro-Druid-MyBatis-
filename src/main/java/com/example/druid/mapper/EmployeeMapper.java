@@ -4,6 +4,8 @@ import com.example.druid.bean.Employee;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * 1.Mapper application.yml 引用 mybatis-config.xml
  * 2.启动Application 引入@MapperScan(value = "com.example.druid.mapper")
@@ -21,5 +23,10 @@ public interface EmployeeMapper {
      * 插入Empolyee，返回主键
      */
     public void insertEmp(Employee employee);
+
+    /**
+     * 查询所有员工
+     * */
+    public List<Employee> getEmps();
 
 }

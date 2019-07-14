@@ -124,13 +124,13 @@ public class ShiroConfig {
     }
 
     /**
-     * @ShiroConfig中注入Ehcache缓存
+     * @ShiroConfig中 应用 Ehcache的缓存
      *
      * */
     @Bean(name = "shiroEhCacheManager")
     public EhCacheManager getEhCacheManger(){
         EhCacheManager em = new EhCacheManager();
-        em.setCacheManagerConfigFile("classpath:config/shiro-ehcache.xml");
+        em.setCacheManagerConfigFile("classpath:config/ehcache.xml");
         return  em;
     }
 }
