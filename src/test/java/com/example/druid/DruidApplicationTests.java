@@ -147,8 +147,8 @@ public class DruidApplicationTests {
 
     @Test
     public void testRedis() {
-//        stringRedisTemplate.opsForValue().set("redis","this is redis value");
-//        stringRedisTemplate.opsForValue().get("redis");
-        redisUtil.set("k23","v23");
+        redisUtil.set("k1","{user:'中文乱码',age:30}");
+        String k1 = redisUtil.get("k1");
+        logger.info(k1);
     }
 }
