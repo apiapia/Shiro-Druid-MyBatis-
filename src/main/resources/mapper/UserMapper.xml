@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.druid.mapper.UserMapper">
-    <!-- 调用EmployeeMapper命名空间的缓存 ehcache -->
+    <!-- 调用EmployeeMapper命名空间的缓存 redis -->
     <cache-ref namespace="com.example.druid.mapper.EmployeeMapper"/>
 
     <!-- 使用缓存 -->

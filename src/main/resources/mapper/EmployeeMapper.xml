@@ -3,28 +3,51 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.druid.mapper.EmployeeMapper">
-    <!-- 开启mybatis缓存 -->
-    <cache type="org.mybatis.caches.ehcache.EhcacheCache"></cache>
-    <!-- 使用缓存 useCache -->
+    <!-- 开启mybatis的第三方缓存 redis,
+     也可调用自己的新建的RedisCache类 com.example.druid.config.RedisCache
+    一个 FIFO 缓存,并每隔 60 秒刷新,存数结果对象或列表的 1024 个引用,
+    而且返回的对象被认为是只读的,
+    因此在不同线程中的调用者之间修改它们会导致冲突。
+    Redis中的存储
+    redis会自动的将Sql+条件+Hash等当做key值，而将查询结果作为value，
+    只有请求中的所有参数都符合，
+    那么就会使用redis中的二级缓存。
+    -->
+    <cache type="com.example.druid.config.RedisCache"
+           flushInterval="60"
+           eviction="LRU"
+           size="1024"
+           readOnly="false"/>
+
+    <!--
+     useCache="true"
+     select的时候使用缓存
+   -->
     <select id="getEmpById" useCache="true" flushCache="false" resultType="com.example.druid.bean.Employee">
      SELECT id,lastName,password,email,departmentId,perms FROM employee where id = #{id}
   </select>
 
-    <select id="getEmpByName" resultType="com.example.druid.bean.Employee">
+    <select id="getEmpByName" useCache="true" flushCache="false" resultType="com.example.druid.bean.Employee">
         SELECT id,lastName,password,email,departmentId,perms FROM employee
         WHERE lastName = #{lastName}
     </select>
 
-    <select id="getEmpByNameAndPassword" resultType="com.example.druid.bean.Employee">
+    <select id="getEmpByNameAndPassword" useCache="true" flushCache="false" resultType="com.example.druid.bean.Employee">
         SELECT id,lastName,password,email,departmentId,perms FROM employee
         WHERE lastName = #{lastName} and password = #{password}
     </select>
 
-    <insert id="insertEmp" parameterType="com.example.druid.bean.Employee" useGeneratedKeys="true" keyProperty="id">
+    <select id="getEmps" useCache="true"  flushCache="false"  resultType="com.example.druid.bean.Employee">
+         SELECT id,lastName,email,departmentId,perms FROM employee
+    </select>
+
+    <!--
+      flushCache="true"
+      insert、delete、update的时候清空缓存
+    -->
+    <insert id="insertEmp"  flushCache="true" parameterType="com.example.druid.bean.Employee" useGeneratedKeys="true" keyProperty="id">
         insert into employee (lastName,email,departmentId) values(#{lastName},#{email},#{departmentId})
     </insert>
 
-    <select id="getEmps" useCache="true" resultType="com.example.druid.bean.Employee">
-         SELECT id,lastName,email,departmentId,perms FROM employee
-    </select>
+
 </mapper>

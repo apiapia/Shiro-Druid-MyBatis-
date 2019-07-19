@@ -2,7 +2,16 @@
 <!DOCTYPE configuration
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
-<!-- 注意configuration的参数加载顺序 -->
+
+<!--
+    注意configuration的参数加载顺序:
+    plugins在配置文件中的位置必须符合要求，否则会报错，顺序如下:
+    properties?, settings?,
+    typeAliases?, typeHandlers?,
+    objectFactory?,objectWrapperFactory?,
+    plugins?,
+    environments?, databaseIdProvider?, mappers?
+-->
 <configuration>
 
     <properties resource="mysqlConfig.properties"></properties>
@@ -23,8 +32,19 @@
         <package name="com.example.druid.bean"/>
     </typeAliases>
 
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+<!--            <property name="dialect" value="mysql"/>-->
+            <property name="offsetAsPageNum" value="false"/>
+            <property name="rowBoundsWithCount" value="false"/>
+            <property name="pageSizeZero" value="true"/>
+            <property name="reasonable" value="false"/>
+            <property name="supportMethodsArguments" value="false"/>
+            <property name="returnPageInfo" value="none"/>
+        </plugin>
+    </plugins>
     <!-- 环境切换:default为development开发环境 -->
-    <environments default="server">
+    <environments default="development">
         <!-- 本地数据库链接 -->
         <environment id="development">
             <!--事务管理器 -->
@@ -50,7 +70,7 @@
 
     <!-- sql映射文件 EmployeeMapper.xml 单元测试时打开 -->
     <mappers>
-<!--        <mapper resource="mapper/EmployeeMapper.xml"></mapper>-->
+        <mapper resource="mapper/EmployeeMapper.xml"></mapper>
     </mappers>
 
 </configuration>

@@ -4,6 +4,7 @@ import com.example.druid.untils.MD5Util;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -20,8 +21,8 @@ public class LoginController {
 
     private String SHIRO_VERIFY_SESSION = "verifySessionCode";
 
-    // @RequestMapping(value = "/login",method = RequestMethod.POST)
-    @PostMapping(value = "login")
+    // @RequestMapping(value = "/toLogin",method = RequestMethod.POST)
+    @PostMapping(value = "toLogin")
     public String login(
             @RequestParam(value = "lastName") String lastName,
             @RequestParam("password") String password,
@@ -38,7 +39,7 @@ public class LoginController {
         // 加密密码
         String md5Pwd =  MD5Util.encrypt(lastName,password);
         //只打印 不记录到log文件 /www/wwwroot/
-        System.out.println("md5Pwd" + md5Pwd);
+        System.out.println("md5Pwd:" + md5Pwd);
 
         UsernamePasswordToken token = new UsernamePasswordToken(lastName,md5Pwd);
 
@@ -58,17 +59,19 @@ public class LoginController {
             currentUser.login(token);
             //登录成功
             log.info("登录成功");
-            model.addAttribute("msg","登录成功");
             //须重定
             return "redirect:/admin";
         }catch (UnknownAccountException e) {
             //e.printStackTrace();
             //登录失败:用户名不存在
-            model.addAttribute("msg","用户名不存在");
+            model.addAttribute("msg",e.getMessage().toString());
             return  "welcome";
         } catch (IncorrectCredentialsException e) {
             //登录失败：密码错误;
-            model.addAttribute("msg","密码有误");
+            model.addAttribute("msg",e.getMessage().toString());
+            return "welcome";
+        } catch (LockedAccountException e) {
+            model.addAttribute("msg",e.getMessage().toString());
             return "welcome";
         }
 

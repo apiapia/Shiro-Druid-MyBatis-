@@ -1,9 +1,8 @@
-
-##############################
-#                            #
-#        spring的配置         #
-#                            #
-##############################
+#  +----------------------------------------------------------------------
+#  | Spring配置
+#  +----------------------------------------------------------------------
+#  | Resource:
+#  +----------------------------------------------------------------------
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
@@ -21,7 +20,7 @@ spring:
     encoding: UTF-8
     servlet:
       content-type: text/html
-    #开发时关闭缓存,不然没法看到实时页面 重要
+    #开发时关闭缓存,不然没法看到实时页面 *** 重要 ***
     cache: false
 
 
@@ -31,37 +30,54 @@ spring:
       max-file-size: -1
       max-request-size: -1
 
-
-##############################
-#                            #
-#   mybatis-config的配置      #
-#                            #
-##############################
+  #redis配置 缓存
+  #https://segmentfault.com/a/1190000012490895
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password:
+    #连接超时时间（毫秒）
+    timeout: 1000
+    #生菜 not jedis
+    lettuce:
+      pool:
+        #连接池最大连接数（使用负值表示没有限制
+        max-active: -1
+        #连接池中的最小空闲连接
+        max-idle: 100
+        #连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1
+    database: 0
+#  +----------------------------------------------------------------------
+#  | mybatis-config的配置
+#  +----------------------------------------------------------------------
+#  | Resource: https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter
+#  +----------------------------------------------------------------------
 mybatis:
+  #类的别名
+  type-aliases-package: com.example.druid.bean
   #配置文件
   config-location: classpath:/mybatis/mybatis-config.xml
   #映射文件 (单元测试时关闭，开发+正式环境时开启)
-  mapper-locations: classpath:/mapper/*.xml
-  #类的别名
-  type-aliases-package: com.example.druid.bean
+  #mapper-locations: classpath:/mapper/*.xml
 
 
-##############################
-#                            #
-#        mybatis翻页插件      #
-#                            #
-##############################
+#  +----------------------------------------------------------------------
+#  | mybatis翻页插件
+#  +----------------------------------------------------------------------
+#  | Resource: https://github.com/pagehelper/pagehelper-spring-boot
+#  +----------------------------------------------------------------------
 pagehelper:
   helper-dialect: mysql
   reasonable: true
   support-methods-arguments: true
   params: count=countSql
 
-##############################
-#                            #
-#        druid 配置          #
-#                            #
-##############################
+#  +----------------------------------------------------------------------
+#  | druid 配置
+#  +----------------------------------------------------------------------
+#  | Source:
+#  +----------------------------------------------------------------------
 # 打断点在单元测试中查看druid的配置是否失效
 # System.out.println(dataSource.getClass());
 druid:
@@ -75,14 +91,3 @@ druid:
 #网页端口
 server:
   port: 8181
-
-#redis配置
-redis:
-  host: 127.0.0.1
-  port: 6379
-  timeout: 10
-  poolMaxTotal: 1000
-  poolMaxIdle: 500
-  poolMaxWait: 500
-
-
