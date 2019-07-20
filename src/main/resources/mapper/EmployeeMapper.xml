@@ -7,10 +7,10 @@
      也可调用自己的新建的RedisCache类 com.example.druid.config.RedisCache
     一个 FIFO 缓存,并每隔 60 秒刷新,存数结果对象或列表的 1024 个引用,
     而且返回的对象被认为是只读的,
-    因此在不同线程中的调用者之间修改它们会导致冲突。
+    因此在不同线程R中的调用者之间修改它们会导致冲突。
     Redis中的存储
-    redis会自动的将Sql+条件+Hash等当做key值，而将查询结果作为value，
-    只有请求中的所有参数都符合，
+    Redis会自动的将Sql+条件+Hash等当做key值，而将查询结果作为value，
+    只要请求中的所有参数都符合，
     那么就会使用redis中的二级缓存。
     -->
     <cache type="com.example.druid.config.RedisCache"
@@ -27,17 +27,39 @@
      SELECT id,lastName,password,email,departmentId,perms FROM employee where id = #{id}
   </select>
 
+
     <select id="getEmpByName" useCache="true" flushCache="false" resultType="com.example.druid.bean.Employee">
         SELECT id,lastName,password,email,departmentId,perms FROM employee
         WHERE lastName = #{lastName}
     </select>
 
-    <select id="getEmpByNameAndPassword" useCache="true" flushCache="false" resultType="com.example.druid.bean.Employee">
+    <!-- 订单查询关联用户的resultMap
+        将整个查询的结果映射到com.example.druid.bean.Employee中
+        column:数据库中的字段 如 last_name
+        property:实体类中 字段的定义
+         -->
+    <resultMap id="getEmpLikeNameResultMap"
+               type="com.example.druid.bean.Employee">
+        <id column="id" property="id"></id>
+        <result column="lastName" property="lastName"></result>
+        <result column="email"    property="email"></result>
+        <result column="departmentId" property="departmentId"></result>
+        <result column="perms"    property="perms"></result>
+    </resultMap>
+
+    <!-- 模糊查询语句 若结果中的数据有变动 则不能开启缓存 -->
+    <select id="getEmpLikeName" useCache="false" flushCache="true" resultMap="getEmpLikeNameResultMap">
+        SELECT id,lastName,password,email,departmentId,perms FROM employee
+        WHERE lastName like CONCAT(#{listName},'%')
+    </select>
+
+    <select id="getEmpByNameAndPassword" useCache="true" flushCache="false"
+            resultType="com.example.druid.bean.Employee">
         SELECT id,lastName,password,email,departmentId,perms FROM employee
         WHERE lastName = #{lastName} and password = #{password}
     </select>
 
-    <select id="getEmps" useCache="true"  flushCache="false"  resultType="com.example.druid.bean.Employee">
+    <select id="getEmps" useCache="true" flushCache="false" resultType="com.example.druid.bean.Employee">
          SELECT id,lastName,email,departmentId,perms FROM employee
     </select>
 
@@ -45,9 +67,9 @@
       flushCache="true"
       insert、delete、update的时候清空缓存
     -->
-    <insert id="insertEmp"  flushCache="true" parameterType="com.example.druid.bean.Employee" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertEmp" flushCache="true" parameterType="com.example.druid.bean.Employee" useGeneratedKeys="true"
+            keyProperty="id">
         insert into employee (lastName,email,departmentId) values(#{lastName},#{email},#{departmentId})
     </insert>
-
 
 </mapper>

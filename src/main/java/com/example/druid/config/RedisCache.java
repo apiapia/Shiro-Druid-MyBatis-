@@ -17,7 +17,13 @@ public class RedisCache implements Cache {
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private final String id; // cache instance id
     private RedisTemplate redisTemplate;
-    private static final long EXPIRE_TIME_IN_MINUTES = 10; // redis过期时间 10分钟
+    /*
+    *
+    * Redis过期时间 30分钟
+    * @select 查询语句使用缓存
+    * @update,delete语句不使用缓存
+    * */
+    private static final long EXPIRE_TIME_IN_MINUTES = 10;
     public  RedisCache(String id) {
         if (id == null) {
             throw new IllegalArgumentException("Cache instances require an ID");

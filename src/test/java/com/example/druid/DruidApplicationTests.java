@@ -2,6 +2,7 @@ package com.example.druid;
 
 import com.example.druid.bean.Employee;
 import com.example.druid.config.RedisCache;
+import com.example.druid.mapper.EmployeeMapper;
 import com.example.druid.untils.HttpRequest;
 import com.example.druid.untils.RedisUtil;
 import com.github.pagehelper.PageHelper;
@@ -114,29 +115,35 @@ public class DruidApplicationTests {
 
     }
 
+    @Autowired
+    EmployeeMapper employeeMapper;
+
+    /**
+     * Redis中的存储
+     * Redis会自动的将Sql+条件+Hash等当做key值，而将查询结果作为value，
+     * 只要请求中的所有参数都符合，
+     * 那么就会使用redis中的二级缓存。
+     * */
     @Test
     public void selectEmpCache() throws IOException {
-        //新建一个sqlSession
-        SqlSession sqlSession1 = sqlSessionFactory.openSession();
-        SqlSession sqlSession2 = sqlSessionFactory.openSession();
 
-        //修改log4j(log4j.properties)的级别为trace/debug日志，记录mysql查询语句，检查是否已经查了二次;
+        //修改log4j(log4j.properties)的级别为trace/debug日志，记录mysql查询语句，
+        // 检查是否已经查了二次;
         //缓存生效后，则不会再有sql查询语句
         //DEBUG - ==>  Preparing: SELECT id,lastName,password
-
-        try {
-            Employee user01 = sqlSession1.selectOne("getEmpById", 3);
-            System.out.println("查询用户2:" + user01);
-        } finally {
-            sqlSession1.close();
+        // String lastName = "a" + "%";
+        String lastName = "a";
+        List<Employee> empList = employeeMapper.getEmpLikeName(lastName);
+        for (Employee e : empList) {
+            System.out.println("查询用户:" + e.getEmail());
         }
 
-        try {
-            Employee user02 = sqlSession2.selectOne("getEmpById", 5);
-            System.out.println("查询用户3:" + user02);
-        } finally {
-            sqlSession2.close();
+        lastName = "j";
+        List<Employee> empList2 = employeeMapper.getEmpLikeName(lastName);
+        for (Employee e : empList2) {
+            System.out.println("查询用户:" + e.getEmail());
         }
+
     }
 
     /**
@@ -147,7 +154,7 @@ public class DruidApplicationTests {
 
     @Test
     public void testRedis() {
-        redisUtil.set("k1","{user:'中文乱码',age:30}");
+        redisUtil.set("k1", "{user:'中文乱码',age:30}");
         String k1 = redisUtil.get("k1");
         logger.info(k1);
     }
