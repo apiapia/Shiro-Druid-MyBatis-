@@ -3,19 +3,21 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.druid.mapper.EmployeeMapper">
-    <!-- 开启mybatis的第三方缓存 redis,
-     也可调用自己的新建的RedisCache类 com.example.druid.config.RedisCache
-    一个 FIFO 缓存,并每隔 60 秒刷新,存数结果对象或列表的 1024 个引用,
+    <!--
+    开启mybatis的第三方缓存 redis,
+    调用自己的新建的RedisCache类 com.example.druid.config.RedisCache
+    FIFO 缓存: 先进先出，按对象进入缓存的顺序来移除它们,
+    flushInterval:miniSeconds default没有刷新时间间隔，仅在调用语句时刷新 flushInterval="6000"
+    并每隔 60 秒刷新,存数结果对象或列表的 1024 个引用,
     而且返回的对象被认为是只读的,
-    因此在不同线程R中的调用者之间修改它们会导致冲突。
+
     Redis中的存储
     Redis会自动的将Sql+条件+Hash等当做key值，而将查询结果作为value，
     只要请求中的所有参数都符合，
     那么就会使用redis中的二级缓存。
     -->
     <cache type="com.example.druid.config.RedisCache"
-           flushInterval="60"
-           eviction="LRU"
+           eviction="FIFO"
            size="1024"
            readOnly="false"/>
 
@@ -47,8 +49,8 @@
         <result column="perms"    property="perms"></result>
     </resultMap>
 
-    <!-- 模糊查询语句 若结果中的数据有变动 则不能开启缓存 -->
-    <select id="getEmpLikeName" useCache="false" flushCache="true" resultMap="getEmpLikeNameResultMap">
+    <!-- 模糊查询语句 -->
+    <select id="selectEmpLikeName" useCache="true" flushCache="false" resultMap="getEmpLikeNameResultMap">
         SELECT id,lastName,password,email,departmentId,perms FROM employee
         WHERE lastName like CONCAT(#{listName},'%')
     </select>

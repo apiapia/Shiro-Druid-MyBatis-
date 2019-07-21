@@ -19,7 +19,7 @@ public interface EmployeeMapper {
     public Employee getEmpByName(String name);
 
     //模糊查询返回的结果集
-    public List<Employee> getEmpLikeName(String name);
+    public List<Employee> selectEmpLikeName(String name);
 
     public Employee getEmpByNameAndPassword(@Param("lastName") String lastName, @Param("password") String password);
     /**

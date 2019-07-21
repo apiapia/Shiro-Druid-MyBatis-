@@ -4,6 +4,7 @@ import com.example.druid.bean.Employee;
 import com.example.druid.config.RedisCache;
 import com.example.druid.mapper.EmployeeMapper;
 import com.example.druid.untils.HttpRequest;
+import com.example.druid.untils.MD5Util;
 import com.example.druid.untils.RedisUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -36,13 +37,16 @@ import java.util.PrimitiveIterator;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-
+@Slf4j
 public class DruidApplicationTests {
 
     //记得注入 Autowired
     @Autowired
     DataSource dataSource;
     Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    EmployeeMapper employeeMapper;
 
     private static SqlSessionFactory sqlSessionFactory;
 
@@ -115,15 +119,12 @@ public class DruidApplicationTests {
 
     }
 
-    @Autowired
-    EmployeeMapper employeeMapper;
-
     /**
      * Redis中的存储
      * Redis会自动的将Sql+条件+Hash等当做key值，而将查询结果作为value，
      * 只要请求中的所有参数都符合，
      * 那么就会使用redis中的二级缓存。
-     * */
+     */
     @Test
     public void selectEmpCache() throws IOException {
 
@@ -133,17 +134,34 @@ public class DruidApplicationTests {
         //DEBUG - ==>  Preparing: SELECT id,lastName,password
         // String lastName = "a" + "%";
         String lastName = "a";
-        List<Employee> empList = employeeMapper.getEmpLikeName(lastName);
+        List<Employee> empList = employeeMapper.selectEmpLikeName(lastName);
         for (Employee e : empList) {
             System.out.println("查询用户:" + e.getEmail());
         }
 
         lastName = "j";
-        List<Employee> empList2 = employeeMapper.getEmpLikeName(lastName);
+        List<Employee> empList2 = employeeMapper.selectEmpLikeName(lastName);
         for (Employee e : empList2) {
             System.out.println("查询用户:" + e.getEmail());
         }
 
+    }
+
+    /**
+     * insertEmp
+     */
+    @Test
+    public void insertEmp() {
+        Employee user = new Employee();
+        user.setLastName("jane");
+        String pwdMd5 = MD5Util.encrypt("jane", "jane");
+        user.setPassword(pwdMd5);
+        user.setEmail("jane@gmail.com");
+        user.setDepartmentId(1);
+        user.setPerms("admin:upd");
+        employeeMapper.insertEmp(user);
+
+        log.info("数据添加成功，并获取ID:" + user.getId());
     }
 
     /**
