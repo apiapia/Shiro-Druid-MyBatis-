@@ -148,20 +148,40 @@ public class DruidApplicationTests {
     }
 
     /**
-     * insertEmp
+     * @insertEmp
      */
     @Test
     public void insertEmp() {
         Employee user = new Employee();
-        user.setLastName("jane");
-        String pwdMd5 = MD5Util.encrypt("jane", "jane");
+        user.setLastName("jim");
+        String pwdMd5 = MD5Util.encrypt("jim", "jim");
         user.setPassword(pwdMd5);
-        user.setEmail("jane@gmail.com");
+        user.setEmail("jim@gmail.com");
         user.setDepartmentId(1);
-        user.setPerms("admin:upd");
+        user.setPerms("admin:add");
         employeeMapper.insertEmp(user);
 
         log.info("数据添加成功，并获取ID:" + user.getId());
+    }
+
+    /**
+     * @update
+     * */
+    @Test
+    public void updateEmp(){
+        Employee user = new Employee();
+        user.setEmail("jane@gmail.com");
+        //String pwdMd5 = MD5Util.encrypt("jane","jane");
+        //user.setPassword(pwdMd5);
+        user.setId(59);
+
+        Integer res = employeeMapper.updateEmp(user);
+        if (res>0){
+            log.info("更新成功" + user.getId());
+        }else {
+            log.error("更新失败");
+        }
+
     }
 
     /**

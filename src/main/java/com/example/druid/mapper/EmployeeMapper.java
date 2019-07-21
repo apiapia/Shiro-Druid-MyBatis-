@@ -28,8 +28,14 @@ public interface EmployeeMapper {
     public void insertEmp(Employee employee);
 
     /**
+     * update更新
+     *
+     * */
+    public int updateEmp(Employee employee);
+
+    /**
      * 查询所有员工
      * */
-    public List<Employee> getEmps();
+    public List<Employee> selectAllEmps();
 
 }
