@@ -19,11 +19,11 @@ public class RedisCache implements Cache {
     private RedisTemplate redisTemplate;
     /*
     *
-    * Redis过期时间 10分钟
+    * Redis过期时间 20分钟
     * @select 查询语句使用缓存
-    * @insert,update,delete语句不使用缓存,数据更新后mybatis会自动刷新二级缓存
+    * @insert,update,delete语句默认会自动刷新二级缓存
     * */
-    private static final long EXPIRE_TIME_IN_MINUTES = 10;
+    private static final long EXPIRE_TIME_IN_MINUTES = 20;
     public  RedisCache(String id) {
         if (id == null) {
             throw new IllegalArgumentException("Cache instances require an ID");

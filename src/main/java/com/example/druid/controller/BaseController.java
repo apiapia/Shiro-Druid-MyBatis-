@@ -17,6 +17,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,16 +58,27 @@ public class BaseController {
     }
 
     @RequestMapping("/add")
+    @RequiresPermissions("admin:add")
     public String add(Model model) {
         model.addAttribute("msg", "add");
         return "add";
     }
 
     @RequestMapping("/upd")
+    @RequiresPermissions("admin:upd")
     public String upd(Model model) {
         model.addAttribute("msg", "upd");
         return "upd";
     }
+
+    @RequestMapping("/del")
+    @RequiresPermissions("admin:del")
+    public String del(Model model) {
+        model.addAttribute("msg", "del");
+        return "del";
+    }
+
+
 
     @GetMapping("/toLogout")
     public String toLogout(Model model) {
@@ -89,6 +101,11 @@ public class BaseController {
         return "login";
     }
 
+    @GetMapping("/unAuth")
+    public String unAuth(Model model) {
+        model.addAttribute("msg", "未授权");
+        return "unAuth";
+    }
 
     @GetMapping("/admin")
     public String admin(Model model) {
@@ -99,5 +116,19 @@ public class BaseController {
         model.addAttribute("msg", "[" + user.getLastName() + "]登录成功");
         return "admin";
     }
+
+
+    @GetMapping("/all")
+    @RequiresPermissions("admin:add,admin:del,admin:upd")
+    public String adminAll(Model model) {
+        Subject currentUser = SecurityUtils.getSubject();
+        //sessionid
+        System.out.println("currentUser.getSession().getId()" + currentUser.getSession().getId());
+        Employee user = (Employee) currentUser.getPrincipal();
+        model.addAttribute("msg", "[" + user.getLastName() + "]登录成功");
+        return "all";
+    }
+
+
 
 }

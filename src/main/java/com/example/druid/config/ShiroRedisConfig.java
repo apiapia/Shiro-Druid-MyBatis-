@@ -99,12 +99,12 @@ public class ShiroRedisConfig {
         // 未授权 url
         shiroFilterFactoryBean.setUnauthorizedUrl(febsProperties.getShiro().getUnauthorizedUrl());
 
-        LinkedHashMap<String,String> filterChainDefinitionMap = new LinkedHashMap<>();
+        LinkedHashMap<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
 
         // 设置免认证 url 列表
         String[] anonUrls = StringUtils.splitByWholeSeparatorPreserveAllTokens(febsProperties.getShiro().getAnonUrl(), ",");
-        for(String url:anonUrls){
-         filterChainDefinitionMap.put(url,"anon");
+        for (String url : anonUrls) {
+            filterChainDefinitionMap.put(url, "anon");
         }
 
         // 自己写退出逻辑,清空登录Redis缓存;
@@ -112,16 +112,26 @@ public class ShiroRedisConfig {
         // filterChainDefinitionMap.put(febsProperties.getShiro().getLogoutUrl(), "logout");
 
         /**
-         * 拦截URL
+         * 用在shiro thymeleaf 前端显示上
+         * 在controller端要配合 @RequirePermissions使用
+         * filterChainDefinitions：apache shiro通过filterChainDefinitions参数来分配链接的过滤，资源过滤有常用的以下几个参数：
+         *
+         * 1、authc 表示需要认证的链接
+         *
+         * 2、perms[/url] 表示该链接需要拥有对应的资源/权限才能访问
+         *
+         * 3、roles[admin] 表示需要对应的角色才能访问
+         *
+         * 4、perms[admin:url] 表示需要对应角色的资源才能访问
          * */
-        filterChainDefinitionMap.put("add","perms[admin:add]");
-        filterChainDefinitionMap.put("upd","perms[admin:upd]");
-        filterChainDefinitionMap.put("del","perms[admin:del]");
+        filterChainDefinitionMap.put("/add", "perms[admin:add]");
+        filterChainDefinitionMap.put("/upd", "perms[admin:upd]");
+        filterChainDefinitionMap.put("/del", "perms[admin:del]");
+        filterChainDefinitionMap.put("/all", "perms[admin:add,admin:upd,user:del]"); //admin的所有权限
 
         // 除上以外所有 url都必须认证通过才可以访问，未通过认证自动访问 LoginUrl
-        filterChainDefinitionMap.put("/**", "authc");
-        //禁止所有资源
-        //filterChainDefinitionMap.put("/**","authc");
+        // authc 表示需要认证的链接
+        filterChainDefinitionMap.put("/**", "authc"); //user
 
         //添加过滤器
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);

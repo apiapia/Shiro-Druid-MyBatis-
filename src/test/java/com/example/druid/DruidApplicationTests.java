@@ -133,13 +133,13 @@ public class DruidApplicationTests {
         //缓存生效后，则不会再有sql查询语句
         //DEBUG - ==>  Preparing: SELECT id,lastName,password
         // String lastName = "a" + "%";
-        String lastName = "a";
-        List<Employee> empList = employeeMapper.selectEmpLikeName(lastName);
-        for (Employee e : empList) {
-            System.out.println("查询用户:" + e.getEmail());
-        }
+//        String lastName = "a";
+//        List<Employee> empList = employeeMapper.selectEmpLikeName(lastName);
+//        for (Employee e : empList) {
+//            System.out.println("查询用户:" + e.getEmail());
+//        }
 
-        lastName = "j";
+        String lastName = "j";
         List<Employee> empList2 = employeeMapper.selectEmpLikeName(lastName);
         for (Employee e : empList2) {
             System.out.println("查询用户:" + e.getEmail());
@@ -166,19 +166,20 @@ public class DruidApplicationTests {
 
     /**
      * @update
-     * */
+     */
     @Test
-    public void updateEmp(){
+    public void updateEmp() {
         Employee user = new Employee();
-        user.setEmail("jane@gmail.com");
-        //String pwdMd5 = MD5Util.encrypt("jane","jane");
-        //user.setPassword(pwdMd5);
-        user.setId(59);
+        user.setEmail("jack@gmail.com");
+        String pwdMd5 = MD5Util.encrypt("jack", "jack");
+        user.setPassword(pwdMd5);
+        user.setId(1);
 
+        //返回受影响的条数;
         Integer res = employeeMapper.updateEmp(user);
-        if (res>0){
+        if (res > 0) {
             log.info("更新成功" + user.getId());
-        }else {
+        } else {
             log.error("更新失败");
         }
 

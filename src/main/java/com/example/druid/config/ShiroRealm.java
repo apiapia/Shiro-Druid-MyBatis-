@@ -45,13 +45,14 @@ public class ShiroRealm extends AuthorizingRealm {
         Employee user = (Employee) currentUser.getPrincipal();
         /*
          * 用户权限列表   https://www.cnblogs.com/hoge66/p/9923476.html
+         * https://blog.csdn.net/SwingPyzf/article/details/46342023
          * */
         String permissions = user.getPerms();
 
         if (!"".equals(permissions) && permissions.contains(",")) {
             for (String perm : StringUtils.split(permissions, ",")) {
                 info.addStringPermission(perm);
-                //打印出每一个用户的权限
+                //将权限资源添加到用户信息中
                 System.out.println("用户：" + user.getLastName() + "的权限：" + perm);
             }
         } else {

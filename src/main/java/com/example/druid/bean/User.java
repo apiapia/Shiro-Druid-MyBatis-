@@ -1,11 +1,16 @@
 package com.example.druid.bean;
 
 import lombok.Data;
+import org.springframework.data.annotation.Id;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import java.io.Serializable;
 
 @Data
 public class User implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String username;
     private Integer age;
